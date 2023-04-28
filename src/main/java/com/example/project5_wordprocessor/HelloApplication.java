@@ -43,7 +43,7 @@ public class HelloApplication extends Application {
         // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/text/Text.html
         Text content = new Text();
         content.setTextAlignment(TextAlignment.LEFT);
-        content.setWrappingWidth(1024);
+        content.setWrappingWidth(WINDOW_WIDTH-100);
         // add this text field to the layout
         layout.setCenter(content);
 
@@ -67,6 +67,9 @@ public class HelloApplication extends Application {
             if (event.getCode().equals(KeyCode.ESCAPE)) {
                 // exit the program
                 System.exit(0);
+            } else if (event.getCode().equals(KeyCode.BACK_SPACE)){
+                text.deleteCharAt(text.length()-1);
+                //content.setText(text.toString());
             }
         });
 
@@ -76,6 +79,8 @@ public class HelloApplication extends Application {
         exampleScene.setOnKeyTyped(event -> {
             // TODO: add whatever the typed character is to the text on this page
             // NOTE: the typed String can be retrieved with event.getCharacter()
+            text.append(event.getCharacter());
+            content.setText(text.toString());
         });
 
         // display the interface
