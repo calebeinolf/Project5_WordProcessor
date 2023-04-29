@@ -11,7 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.input.KeyCode;
 
-public class HelloApplication extends Application {
+public class Main extends Application {
     private final StringBuilder text = new StringBuilder();
 
     /**

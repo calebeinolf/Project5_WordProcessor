@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.project5_wordprocessor/com.example.project5_wordprocessor.HelloApplication
+                                com.example.project5_wordprocessor/com.example.project5_wordprocessor.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
