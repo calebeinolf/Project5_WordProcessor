@@ -12,14 +12,14 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.input.KeyCode;
 
 public class Main extends Application {
-    private final StringBuilder text = new StringBuilder();
+    private StringBuilder text = new StringBuilder();
 
     /**
      * Set up the starting scene of your application given the primaryStage (basically the window)
-     * https://docs.oracle.com/javase/8/javafx/api/index.html
      *
      * @param primaryStage the primary container for scenes
      */
+    // https://docs.oracle.com/javase/8/javafx/api/index.html
     @Override
     public void start(Stage primaryStage) {
         // Add a title to the application window
@@ -69,7 +69,7 @@ public class Main extends Application {
                 System.exit(0);
             } else if (event.getCode().equals(KeyCode.BACK_SPACE)){
                 text.deleteCharAt(text.length()-1);
-                //content.setText(text.toString());
+                content.setText(text.toString());
             }
         });
 
@@ -79,8 +79,10 @@ public class Main extends Application {
         exampleScene.setOnKeyTyped(event -> {
             // TODO: add whatever the typed character is to the text on this page
             // NOTE: the typed String can be retrieved with event.getCharacter()
-            text.append(event.getCharacter());
-            content.setText(text.toString());
+            if (!event.getCharacter().equals("\b")) {
+                text.append(event.getCharacter());
+                content.setText(text.toString());
+            }
         });
 
         // display the interface
