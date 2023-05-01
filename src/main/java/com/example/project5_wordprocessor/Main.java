@@ -5,10 +5,8 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.input.KeyCode;
 
 public class Main extends Application {
@@ -74,10 +72,6 @@ public class Main extends Application {
         exampleScene.setOnKeyTyped(event -> {
             // TODO: add whatever the typed character is to the text on this page
             // NOTE: the typed String can be retrieved with event.getCharacter()
-//            if (!event.getCharacter().equals("\b")) {
-//                text.append(event.getCharacter());
-//                content.setText(text.toString());
-//            }
 
             text.addText(event.getCharacter());
         });
