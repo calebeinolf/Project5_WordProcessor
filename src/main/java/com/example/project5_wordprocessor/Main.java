@@ -10,7 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
 
 public class Main extends Application {
-    //private StringBuilder text = new StringBuilder();
 
     /**
      * Set up the starting scene of your application given the primaryStage (basically the window)
@@ -18,8 +17,6 @@ public class Main extends Application {
      * @param primaryStage the primary container for scenes
      */
     // https://docs.oracle.com/javase/8/javafx/api/index.html
-
-
     @Override
     public void start(Stage primaryStage) {
         // Add a title to the application window
@@ -28,18 +25,16 @@ public class Main extends Application {
         // prepare the scene layout to use a BorderPane -- a top, bottom, left, right, center style pane layout
         // https://docs.oracle.com/javafx/2/layout/builtin_layouts.htm
         BorderPane layout = new BorderPane();
-        TextEdit text = new TextEdit(layout);
         // Create a new scene using this layout
         // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Scene.html
         // define the size of this scene
         double WINDOW_WIDTH = 1000;
         double WINDOW_HEIGHT = 500;
         Scene exampleScene = new Scene(layout, WINDOW_WIDTH, WINDOW_HEIGHT);
-
         // make this scene the initial (and for now only) scene in your application
         primaryStage.setScene(exampleScene);
 
-
+        TextEdit text = new TextEdit(layout);
 
         // create a new button object and set its text
         Button btn = new Button("Say 'Hello World'");
@@ -49,32 +44,26 @@ public class Main extends Application {
             text.addText("Hello World! ");
         });
         // add this button to the layout centered at the bottom with some spacing from other elements
-        BorderPane.setAlignment(btn, Pos.CENTER);
+        BorderPane.setAlignment(btn, Pos.CENTER_LEFT);
         BorderPane.setMargin(btn, new Insets(16, 16, 16, 16));
-        layout.setBottom(btn);
+        layout.setTop(btn);
+
 
         // define code to run every time a KeyPressed event is detected on this window to check for ESC to close
         // NOTE: there even is of type javafx.scene.input.KeyEvent
         // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
         exampleScene.setOnKeyPressed(event -> {
-            // check if the key that was pressed is the ESC key
             if (event.getCode().equals(KeyCode.ESCAPE)) {
-                // exit the program
                 System.exit(0);
             } else if (event.getCode().equals(KeyCode.BACK_SPACE)){
                 text.backspace();
             }
         });
 
-        // define code to run every time a KeyTyped event is detected on this window to check for ESC to close
-        // NOTE: there even is of type javafx.scene.input.KeyEvent
-        // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
         exampleScene.setOnKeyTyped(event -> {
-            // TODO: add whatever the typed character is to the text on this page
-            // NOTE: the typed String can be retrieved with event.getCharacter()
-
             text.addText(event.getCharacter());
         });
+
 
         // display the interface
         primaryStage.show();

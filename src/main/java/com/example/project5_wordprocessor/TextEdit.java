@@ -28,7 +28,6 @@ public class TextEdit {
         if (!s.equals("\b")) {
             beforeCursor.append(s);
             content.setText(beforeCursor.toString());
-            System.out.println(s);
         }
     }
 
