@@ -57,6 +57,10 @@ public class Main extends Application {
                 System.exit(0);
             } else if (event.getCode().equals(KeyCode.BACK_SPACE)){
                 text.backspace();
+            } else if (event.getCode().equals(KeyCode.LEFT)){
+                text.moveCursorLeft();
+            } else if (event.getCode().equals(KeyCode.RIGHT)){
+                text.moveCursorRight();
             }
         });
 

@@ -1,5 +1,4 @@
 package com.example.project5_wordprocessor;
-
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -24,10 +23,14 @@ public class TextEdit {
         layout.setCenter(content);
     }
 
+    public void displayText(){
+        content.setText(beforeCursor.toString() + "|" + afterCursor.toString());
+    }
+
     public void addText(String s){
         if (!s.equals("\b")) {
             beforeCursor.append(s);
-            content.setText(beforeCursor.toString());
+            displayText();
         }
     }
 
@@ -36,5 +39,22 @@ public class TextEdit {
             beforeCursor.deleteCharAt(beforeCursor.length() - 1);
             content.setText(beforeCursor.toString());
         }
+    }
+
+    public void moveCursorLeft(){
+        if (!beforeCursor.isEmpty()) {
+            afterCursor.insert(0, beforeCursor.charAt(beforeCursor.length() - 1));
+            beforeCursor.deleteCharAt(beforeCursor.length() - 1);
+        }
+        displayText();
+    }
+
+    public void moveCursorRight(){
+        if (!afterCursor.isEmpty()) {
+            beforeCursor.append(afterCursor.charAt(0));
+            afterCursor.deleteCharAt(0);
+        }
+        displayText();
+
     }
 }
