@@ -1,6 +1,7 @@
 package com.example.project5_wordprocessor;
 
 import javafx.application.Application;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -10,6 +11,32 @@ import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
 
 public class Main extends Application {
+
+    TextEdit text;
+
+    public HBox addTopMenu() {
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(15, 15, 15, 15));
+        hbox.setSpacing(10);
+        hbox.setStyle("-fx-background-color: #095996;");
+
+        Button buttonSave = new Button("Save");
+        buttonSave.setPrefSize(70, 20);
+        buttonSave.setFocusTraversable(false);
+        buttonSave.setOnAction(event -> {
+            //TODO: Make this save the doc
+        });
+        Button buttonUndo = new Button("Undo");
+        buttonUndo.setPrefSize(70, 20);
+        buttonUndo.setFocusTraversable(false);
+        buttonUndo.setOnAction(event -> {
+            //TODO: Make this undo
+        });
+
+        hbox.getChildren().addAll(buttonSave, buttonUndo);
+
+        return hbox;
+    }
 
     /**
      * Set up the starting scene of your application given the primaryStage (basically the window)
@@ -22,36 +49,24 @@ public class Main extends Application {
         // Add a title to the application window
         primaryStage.setTitle("Word Processor");
 
-        // prepare the scene layout to use a BorderPane -- a top, bottom, left, right, center style pane layout
-        // https://docs.oracle.com/javafx/2/layout/builtin_layouts.htm
-        BorderPane layout = new BorderPane();
-        // Create a new scene using this layout
-        // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/Scene.html
-        // define the size of this scene
+
+        BorderPane border = new BorderPane();
         double WINDOW_WIDTH = 1000;
         double WINDOW_HEIGHT = 500;
-        Scene exampleScene = new Scene(layout, WINDOW_WIDTH, WINDOW_HEIGHT);
-        // make this scene the initial (and for now only) scene in your application
+        Scene exampleScene = new Scene(border, WINDOW_WIDTH, WINDOW_HEIGHT);
         primaryStage.setScene(exampleScene);
 
-        TextEdit text = new TextEdit(layout);
+        //adds the menu at the top that holds the buttons
+        HBox topMenu = addTopMenu();
+        border.setTop(topMenu);
 
-        // create a new button object and set its text
-        Button btn = new Button("Say 'Hello World'");
-        btn.setFocusTraversable(false);
-        // define the code that should run when the button is clicked
-        btn.setOnAction(event -> {
-            text.addText("Hello World! ");
-        });
-        // add this button to the layout centered at the bottom with some spacing from other elements
-        BorderPane.setAlignment(btn, Pos.CENTER_LEFT);
-        BorderPane.setMargin(btn, new Insets(16, 16, 16, 16));
-        layout.setTop(btn);
+        text = new TextEdit(border);
+
+        // display the interface
+        primaryStage.show();
 
 
-        // define code to run every time a KeyPressed event is detected on this window to check for ESC to close
-        // NOTE: there even is of type javafx.scene.input.KeyEvent
-        // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/KeyEvent.html
+        //BUTTON PRESSES
         exampleScene.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ESCAPE)) {
                 System.exit(0);
@@ -68,9 +83,6 @@ public class Main extends Application {
             text.addText(event.getCharacter());
         });
 
-
-        // display the interface
-        primaryStage.show();
     }
 
     public static void main(String[] args) {

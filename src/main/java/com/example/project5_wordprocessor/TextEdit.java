@@ -10,7 +10,6 @@ public class TextEdit {
 
     private StringBuilder beforeCursor = new StringBuilder();
     private StringBuilder afterCursor = new StringBuilder();
-
     private Text content;
 
     // create a new text node to display text on the interface
@@ -23,7 +22,7 @@ public class TextEdit {
         layout.setCenter(content);
     }
 
-    public void displayText(){
+    public void displayText() {
         content.setText(beforeCursor.toString() + "|" + afterCursor.toString());
     }
 
