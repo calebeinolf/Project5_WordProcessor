@@ -2,6 +2,7 @@ package com.example.project5_wordprocessor;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -13,6 +14,7 @@ import java.util.Deque;
 
 public class TextEdit {
     double WINDOW_WIDTH = 1000;
+    double WINDOW_HEIGHT = 500;
     StackPane contentPane;
     private final StringBuilder beforeCursor = new StringBuilder();
     private final StringBuilder afterCursor = new StringBuilder();
@@ -42,9 +44,17 @@ public class TextEdit {
         content.setWrappingWidth(WINDOW_WIDTH - 100);
         StackPane.setAlignment(content, Pos.TOP_LEFT);
 
-        // add this text field to the layout
+        //adds both Text nodes to the contentPane
         contentPane.getChildren().addAll(content, startText);
-        layout.setLeft(contentPane);
+
+        //adds the contentPane to a scrollable pane
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPrefSize(WINDOW_WIDTH,WINDOW_HEIGHT);
+        scrollPane.setContent(contentPane);
+        scrollPane.setFocusTraversable(false);
+
+        //adds the scrollPane to the overall layout
+        layout.setLeft(scrollPane);
     }
 
     public String getText(){

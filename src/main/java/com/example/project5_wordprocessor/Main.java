@@ -1,9 +1,10 @@
 package com.example.project5_wordprocessor;
 
 import javafx.application.Application;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -20,6 +21,8 @@ import java.util.Scanner;
 public class Main extends Application {
 
     TextEdit text;
+    double WINDOW_WIDTH = 1000;
+    double WINDOW_HEIGHT = 500;
 
     public HBox addTopMenu(Stage stage) {
         HBox hbox = new HBox();
@@ -78,6 +81,8 @@ public class Main extends Application {
     }
 
     private void openFile(File file) {
+        Stage newWindow = new Stage();
+        start(newWindow);
         try {
             Scanner sc = new Scanner(file);
             while (sc.hasNextLine()){
@@ -102,8 +107,6 @@ public class Main extends Application {
 
 
         BorderPane border = new BorderPane();
-        double WINDOW_WIDTH = 1000;
-        double WINDOW_HEIGHT = 500;
         Scene exampleScene = new Scene(border, WINDOW_WIDTH, WINDOW_HEIGHT);
         primaryStage.setScene(exampleScene);
 
