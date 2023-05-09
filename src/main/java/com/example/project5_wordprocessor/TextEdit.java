@@ -1,26 +1,26 @@
 package com.example.project5_wordprocessor;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-import java.util.Scanner;
-
+import java.util.Deque;
 
 public class TextEdit {
     double WINDOW_WIDTH = 1000;
-    double WINDOW_HEIGHT = 500;
     StackPane contentPane;
-    private StringBuilder beforeCursor = new StringBuilder();
-    private StringBuilder afterCursor = new StringBuilder();
-    private Text startText;
-    private Text content;
+    private final StringBuilder beforeCursor = new StringBuilder();
+    private final StringBuilder afterCursor = new StringBuilder();
+    private final Text startText;
+    private final Text content;
+    private Deque<Event> history;
+    private Deque<Character> deletedChars;
+    private Deque<Integer> eventIndex;
 
     // create a new text node to display text on the interface
     // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/text/Text.html
@@ -48,7 +48,7 @@ public class TextEdit {
     }
 
     public String getText(){
-        return beforeCursor.toString() + afterCursor.toString();
+        return beforeCursor + afterCursor.toString();
     }
 
     public void displayText() {
@@ -57,7 +57,7 @@ public class TextEdit {
         } else {
             contentPane.getChildren().remove(startText);
         }
-        content.setText(beforeCursor.toString() + "|" + afterCursor.toString());
+        content.setText(beforeCursor + "|" + afterCursor);
 
 //        content.setText(beforeCursor.toString() + afterCursor.toString());
 //        addCursor(pass thru the coordinates at which the beforeCursor string ends, put cursor there)
@@ -139,5 +139,25 @@ public class TextEdit {
             //move cursor up that many characters in the below line
         // else:
             //move cursor to end of afterCursor
+    }
+
+    public void undo(){
+
+        // TODO: these things need to be added elsewhere:
+        // make typing add the key event to the History stack (deque) AND
+        // make it store the location of that character in the eventIndex stack
+        // make backspace add that key event to the History stack AND:
+        // make it store the character that was deleted in the deletedChars stack
+        // make it store the location of that character in the eventIndex stack
+
+        // TODO: make the undo method work:
+        // if the last event in the History stack was "\b" (backspace):
+        //      get the last deleted char from deletedChars,
+        //      put it back at its index that was stored in the eventIndex stack
+        // else:
+        //      get the event's character (probably using event.getCharacter()) from the top of the History stack
+        //      also get the index it was deleted from from the eventIndex stack
+        //      find that character (in the combined String of beforeCursor and afterCursor) and remove it
+
     }
 }

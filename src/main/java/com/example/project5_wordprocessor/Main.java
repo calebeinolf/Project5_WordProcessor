@@ -1,6 +1,8 @@
 package com.example.project5_wordprocessor;
 
 import javafx.application.Application;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -60,6 +62,7 @@ public class Main extends Application {
         buttonUndo.setFocusTraversable(false);
         buttonUndo.setOnAction(event -> {
             //TODO: Make this undo
+            text.undo();
         });
 
         hbox.getChildren().addAll(buttonSave, buttonOpen, buttonUndo);
@@ -119,6 +122,9 @@ public class Main extends Application {
             text.addText(event.getCharacter());
         });
 
+        KeyCodeCombination ctrlZ = new KeyCodeCombination(KeyCode.Z, KeyCodeCombination.CONTROL_DOWN);
+
+
         exampleScene.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ESCAPE)) {
                 System.exit(0);
@@ -132,7 +138,10 @@ public class Main extends Application {
                 text.moveCursorUp();
             } else if (event.getCode().equals(KeyCode.DOWN)) {
                 text.moveCursorDown();
-            } //else if (event.getCode().equals(KeyCode.ENTER)){
+            } else if (ctrlZ.match(event)){
+                System.out.println("undo!");
+            }
+            //else if (event.getCode().equals(KeyCode.ENTER)){
 //                text.backspace();
 //                text.addText("\n");
 //                System.out.println("!!!");
