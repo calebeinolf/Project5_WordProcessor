@@ -3,6 +3,7 @@ import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -11,6 +12,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.util.Deque;
+import java.util.LinkedList;
 
 public class TextEdit {
     double WINDOW_WIDTH = 1000;
@@ -20,13 +22,17 @@ public class TextEdit {
     private final StringBuilder afterCursor = new StringBuilder();
     private final Text startText;
     private final Text content;
-    private Deque<Event> history;
+    private Deque<String> history;
     private Deque<Character> deletedChars;
     private Deque<Integer> eventIndex;
 
     // create a new text node to display text on the interface
     // https://docs.oracle.com/javase/8/javafx/api/javafx/scene/text/Text.html
     public TextEdit(BorderPane layout) {
+        history = new LinkedList<>();
+        deletedChars = new LinkedList<>();
+        eventIndex = new LinkedList<>();
+
         contentPane = new StackPane();
         contentPane.setPadding(new Insets(15, 15, 15, 15));
 
@@ -78,11 +84,19 @@ public class TextEdit {
             beforeCursor.append(s);
             displayText();
         }
-//        System.out.println(beforeCursor.toString() + "|" + afterCursor.toString());
+        history.push(s);
+        eventIndex.push(beforeCursor.length()-1);
+
+//        System.out.println(history.toString());
+//        System.out.println(eventIndex.toString());
     }
 
-    public void backspace(){
+    public void backspace(String s){
         if (!beforeCursor.isEmpty()) {
+            deletedChars.push(beforeCursor.charAt(beforeCursor.length()-1));
+            eventIndex.push(beforeCursor.length()-1);
+            history.push(s);
+
             beforeCursor.deleteCharAt(beforeCursor.length() - 1);
 //            content.setText(beforeCursor.toString());
             displayText();
@@ -110,10 +124,8 @@ public class TextEdit {
         return nthLastIndexOf(--nth, ch, string.substring(0, string.lastIndexOf(ch)));
     }
 
-    public void moveCursorUp(){ // NOT WORKING RIGHT
-
+    public void moveCursorUp(){
 //        System.out.println(beforeCursor.toString());
-
         if (beforeCursor.toString().contains("\n")){
             int lastLineLength = beforeCursor.toString().length()-beforeCursor.toString().lastIndexOf("\n")-1;
             int secondToLastLineLength = -1+beforeCursor.length()-(beforeCursor.substring(0, nthLastIndexOf(1,"\n",beforeCursor.toString())).lastIndexOf("\n"))-lastLineLength;
@@ -128,19 +140,12 @@ public class TextEdit {
             for (int i=0; i < amtToRemove; i++){
                 moveCursorLeft();
             }
-
-
         } else {
-            System.out.println("oh no");
+            int length = beforeCursor.length();
+            for (int i = 0; i < length; i++){
+                moveCursorLeft();
+            }
         }
-        //if the beforeCursor has a line break:
-            //if last line length < 2nd to last line length:
-                //last line length + (2nd to last line length - last line length)
-            //else
-                //remove last line from beforeCursor and add it to afterCursor
-
-        // else:
-            //move cursor to beginning of beforeCursor
     }
 
     public void moveCursorDown(){
@@ -149,25 +154,47 @@ public class TextEdit {
             //move cursor up that many characters in the below line
         // else:
             //move cursor to end of afterCursor
+//        if (afterCursor.toString().contains("\n")){
+//            int beforeCursorLastLineLength = beforeCursor.toString().length()-beforeCursor.toString().lastIndexOf("\n")-1;
+//            int currentLineLength = beforeCursorLastLineLength+(afterCursor.indexOf("\n"));
+//
+//            int amtToMove = currentLineLength + 1;
+//
+//            //move cursor right 'currentLineLength' times
+//            for (int i=0; i < amtToMove; i++){
+//                moveCursorRight();
+//            }
+//        } else {
+//            int length = afterCursor.length();
+//            for (int i = 0; i < length; i++){
+//                moveCursorRight();
+//            }
+//        }
     }
 
     public void undo(){
+        if (!history.isEmpty() && !eventIndex.isEmpty()){
+//            System.out.println(eventIndex.peek());
+//            System.out.println(beforeCursor.length()-1);
+                if (history.peek().equals("\b")) {
+                    beforeCursor.insert((int) eventIndex.poll(), deletedChars.poll());
+                    history.pop();
+                } else {
+                    if (eventIndex.peek() < beforeCursor.length()) {
+                        beforeCursor.deleteCharAt(eventIndex.poll());
+                        history.pop();
+                    } else {
+                        afterCursor.deleteCharAt(eventIndex.poll() - beforeCursor.length());
+                        history.pop();
+                    }
+                }
+                displayText();
+        }
+    }
 
-        // TODO: these things need to be added elsewhere:
-        // make typing add the key event to the History stack (deque) AND
-        // make it store the location of that character in the eventIndex stack
-        // make backspace add that key event to the History stack AND:
-        // make it store the character that was deleted in the deletedChars stack
-        // make it store the location of that character in the eventIndex stack
-
-        // TODO: make the undo method work:
-        // if the last event in the History stack was "\b" (backspace):
-        //      get the last deleted char from deletedChars,
-        //      put it back at its index that was stored in the eventIndex stack
-        // else:
-        //      get the event's character (probably using event.getCharacter()) from the top of the History stack
-        //      also get the index it was deleted from from the eventIndex stack
-        //      find that character (in the combined String of beforeCursor and afterCursor) and remove it
-
+    public void clearStacks(){
+        history.clear();
+        deletedChars.clear();
+        eventIndex.clear();
     }
 }

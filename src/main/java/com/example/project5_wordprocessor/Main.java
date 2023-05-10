@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import javax.swing.*;
 
 public class Main extends Application {
 
@@ -30,34 +31,18 @@ public class Main extends Application {
         hbox.setSpacing(10);
         hbox.setStyle("-fx-background-color: #095996;");
 
-        FileChooser fileChooser = new FileChooser();
         Button buttonSave = new Button("Save");
         buttonSave.setPrefSize(70, 20);
         buttonSave.setFocusTraversable(false);
         buttonSave.setOnAction(event -> {
-            //Set extension filter for text files
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-            fileChooser.getExtensionFilters().add(extFilter);
-            //Show save file dialog
-            File file = fileChooser.showSaveDialog(stage);
-
-            if (file != null) {
-                try {
-                    saveTextToFile(text.getText(), file);
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            saveFile(stage);
         });
 
         Button buttonOpen = new Button("Open");
         buttonOpen.setPrefSize(70, 20);
         buttonOpen.setFocusTraversable(false);
         buttonOpen.setOnAction(event -> {
-            File file = fileChooser.showOpenDialog(stage);
-            if (file != null) {
-                openFile(file);
-            }
+            openFile(stage);
         });
 
         Button buttonUndo = new Button("Undo");
@@ -68,7 +53,23 @@ public class Main extends Application {
             text.undo();
         });
 
-        hbox.getChildren().addAll(buttonSave, buttonOpen, buttonUndo);
+        Button buttonFont = new Button("Font");
+        buttonFont.setPrefSize(70,20);
+        buttonFont.setFocusTraversable(false);
+
+        buttonFont.setOnAction(actionEvent -> {
+            JOptionPane.showMessageDialog(null,"Coming Soon!");
+        });
+
+        Button buttonBold = new Button("Bold");
+        buttonBold.setPrefSize(70,20);
+        buttonBold.setFocusTraversable(false);
+        buttonBold.setOnAction(actionEvent -> {
+
+            JOptionPane.showMessageDialog(null,"Coming Soon!");
+        });
+
+        hbox.getChildren().addAll(buttonSave, buttonOpen, buttonUndo, buttonFont, buttonBold);
 
         return hbox;
     }
@@ -80,17 +81,39 @@ public class Main extends Application {
         writer.close();
     }
 
-    private void openFile(File file) {
-        Stage newWindow = new Stage();
-        start(newWindow);
-        try {
-            Scanner sc = new Scanner(file);
-            while (sc.hasNextLine()){
-                text.addText(sc.nextLine());
-                text.addText("\n");
+    private void openFile(Stage stage) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            try {
+                Scanner sc = new Scanner(file);
+                StringBuilder sb = new StringBuilder();
+                while (sc.hasNextLine()) {
+                    sb.append(sc.nextLine());
+                    sb.append("\n");
+                }
+                text.addText(sb.toString());
+            } catch (IOException e) {
+                System.err.println("No such file");
             }
-        } catch (IOException e){
-            System.err.println("No such file");
+            text.clearStacks();
+            stage.setTitle(file.getName());
+        }
+    }
+
+    public void saveFile(Stage stage){
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(stage);
+        if (file != null) {
+            try {
+                saveTextToFile(text.getText(), file);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -103,7 +126,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         // Add a title to the application window
-        primaryStage.setTitle("Word Processor");
+        primaryStage.setTitle("Untitled.txt");
 
 
         BorderPane border = new BorderPane();
@@ -122,17 +145,27 @@ public class Main extends Application {
 
         //BUTTON PRESSES
         exampleScene.setOnKeyTyped(event -> {
-            text.addText(event.getCharacter());
+            if (!event.isControlDown() && (int) event.getCharacter().charAt(0) != 13 && (int) event.getCharacter().charAt(0) != 8){
+                text.addText(event.getCharacter());
+                int a = (int) event.getCharacter().charAt(0);
+//                System.out.println(a);
+            }
         });
 
         KeyCodeCombination ctrlZ = new KeyCodeCombination(KeyCode.Z, KeyCodeCombination.CONTROL_DOWN);
+        KeyCodeCombination ctrlS = new KeyCodeCombination(KeyCode.S, KeyCodeCombination.CONTROL_DOWN);
+        KeyCodeCombination ctrlO = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.CONTROL_DOWN);
 
+        KeyCodeCombination ctrlLeft = new KeyCodeCombination(KeyCode.LEFT, KeyCodeCombination.CONTROL_DOWN);
+        KeyCodeCombination ctrlRight = new KeyCodeCombination(KeyCode.RIGHT, KeyCodeCombination.CONTROL_DOWN);
+        KeyCodeCombination ctrlUp = new KeyCodeCombination(KeyCode.UP, KeyCodeCombination.CONTROL_DOWN);
+        KeyCodeCombination ctrlDown = new KeyCodeCombination(KeyCode.DOWN, KeyCodeCombination.CONTROL_DOWN);
 
         exampleScene.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ESCAPE)) {
                 System.exit(0);
             } else if (event.getCode().equals(KeyCode.BACK_SPACE)){
-                text.backspace();
+                text.backspace("\b");
             } else if (event.getCode().equals(KeyCode.LEFT)){
                 text.moveCursorLeft();
             } else if (event.getCode().equals(KeyCode.RIGHT)){
@@ -142,13 +175,14 @@ public class Main extends Application {
             } else if (event.getCode().equals(KeyCode.DOWN)) {
                 text.moveCursorDown();
             } else if (ctrlZ.match(event)){
-                System.out.println("undo!");
+                text.undo();
+            } else if (ctrlS.match(event)){
+                saveFile(primaryStage);
+            } else if (ctrlO.match(event)){
+                openFile(primaryStage);
+            } else if (event.getCode().equals(KeyCode.ENTER)){
+                text.addText("\n");
             }
-            //else if (event.getCode().equals(KeyCode.ENTER)){
-//                text.backspace();
-//                text.addText("\n");
-//                System.out.println("!!!");
-//            }
         });
 
 
