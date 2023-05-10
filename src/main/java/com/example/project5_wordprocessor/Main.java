@@ -1,10 +1,8 @@
 package com.example.project5_wordprocessor;
 
 import javafx.application.Application;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
