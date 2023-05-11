@@ -42,7 +42,7 @@ public class Main extends Application {
         HBox hBoxLower = new HBox();
         hBoxLower.setPadding(new Insets(5, 15, 5, 15));
         hBoxLower.setSpacing(10);
-        hBoxLower.setStyle("-fx-background-color: #d5dfe6;");
+        hBoxLower.setStyle("-fx-background-color: #cfdce6;");
         Text instructions = new Text("Tips:    Ctrl+S = Save,    Ctrl+O = Open (overwrites current file),    Ctrl+Z = Undo");
         instructions.setFont(Font.font (Font.getDefault().getName(), 12));
         hBoxLower.getChildren().add(instructions);
@@ -50,20 +50,23 @@ public class Main extends Application {
         Button buttonSave = new Button("Save");
         buttonSave.setPrefSize(70, 20);
         buttonSave.setFocusTraversable(false);
+        buttonSave.setStyle("-fx-background-color: #cfdce6;");
         buttonSave.setOnAction(event -> saveFile(stage));
 
         Button buttonOpen = new Button("Open");
         buttonOpen.setPrefSize(70, 20);
         buttonOpen.setFocusTraversable(false);
+        buttonOpen.setStyle("-fx-background-color: #cfdce6;");
         buttonOpen.setOnAction(event -> openFile(stage));
 
         Button buttonUndo = new Button("Undo");
         buttonUndo.setPrefSize(70, 20);
         buttonUndo.setFocusTraversable(false);
+        buttonUndo.setStyle("-fx-background-color: #cfdce6;");
         buttonUndo.setOnAction(event -> text.undo());
 
         Button buttonFont = new Button("Change Font");
-        buttonFont.setPrefSize(110,20);
+        buttonFont.setPrefSize(100,20);
         buttonFont.setFocusTraversable(false);
         buttonFont.setOnAction(event -> text.changeFont());
 

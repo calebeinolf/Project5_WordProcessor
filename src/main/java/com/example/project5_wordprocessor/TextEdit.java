@@ -63,11 +63,17 @@ public class TextEdit {
 
         double BLINK_INTERVAL = 500;
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(BLINK_INTERVAL), event -> {
-            if (contentPane.getChildren().contains(cursorText)) {
-                contentPane.getChildren().remove(cursorText);
+            if (cursorText.getFill().equals(Color.valueOf("#cfdce6"))){
+                cursorText.setFill(Color.BLACK);
             } else {
-                contentPane.getChildren().add(cursorText);
+                cursorText.setFill(Color.valueOf("#cfdce6"));
             }
+
+//            if (contentPane.getChildren().contains(cursorText)) {
+//                contentPane.getChildren().remove(cursorText);
+//            } else {
+//                contentPane.getChildren().add(cursorText);
+//            }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -75,7 +81,7 @@ public class TextEdit {
         startText = new Text();
         startText.setText(" Start typing...");
         startText.setFont(Font.font (currentFont, 18));
-        startText.setFill(Color.LIGHTGRAY);
+        startText.setFill(Color.valueOf("#cfdce6"));
         startText.setTextAlignment(TextAlignment.LEFT);
         startText.setY(25);
         startText.setX(15);
@@ -119,7 +125,6 @@ public class TextEdit {
         }
         content.setText(beforeCursor + " " + afterCursor);
         cursorText.setText(blankBeforeCursor + "|" + blankAfterCursor);
-
     }
 
     /**
@@ -128,6 +133,12 @@ public class TextEdit {
      */
     public void addText(String s){
         if (!s.equals("\b")) {
+            int beforeCursorLastLineLength = beforeCursor.toString().length() - beforeCursor.toString().lastIndexOf("\n")-1;
+            int currentLineLength = beforeCursorLastLineLength + (afterCursor.indexOf("\n"));
+            if (currentLineLength==88){
+                beforeCursor.append("\n");
+                blankBeforeCursor.append("\n");
+            }
             beforeCursor.append(s);
             for (int i = 0; i < s.length(); i++) {
                 if (s.charAt(i)==('\n')) {
